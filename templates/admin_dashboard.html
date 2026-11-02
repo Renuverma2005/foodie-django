@@ -1,0 +1,359 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Foodie | Admin Dashboard{% endblock %}
+
+{% block content %}
+
+
+<div class="fd-dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="fd-sidebar">
+        <a href="{% url 'admin_dashboard' %}" class="fd-logo">
+            <span class="fd-logo-icon"><i class="bi bi-egg-fried"></i></span>
+            <span class="fd-logo-text">
+                foodie<span>.</span>
+                <small>ADMIN STUDIO</small>
+            </span>
+        </a>
+
+        <div class="fd-side-label">MAIN MENU</div>
+
+        <nav class="fd-side-nav">
+            <a href="{% url 'overview' %}" class="fd-side-link active">
+                <i class="bi bi-grid-1x2"></i>
+                <span>Overview</span>
+                <i class="bi bi-chevron-right fd-side-arrow"></i>
+            </a>
+
+            <a href="{% url 'food_menu' %}" class="fd-side-link">
+    <i class="bi bi-cup-hot"></i>
+    <span>Food Menu</span>
+</a>
+
+          
+
+
+            <div class="fd-side-label fd-side-label-spaced">OPERATIONS</div>
+
+            <a href="{% url 'my_orders' %}" class="fd-side-link">
+                <i class="bi bi-bag-check"></i>
+                <span>Orders</span>
+                <span class="fd-soon">SETUP</span>
+            </a>
+
+            <a href="" class="fd-side-link">
+                <i class="bi bi-chat-left-text"></i>
+                <span>Messages</span>
+                <span class="fd-soon">SETUP</span>
+            </a>
+
+            <a href="/admin/" class="fd-side-link">
+                <i class="bi bi-sliders"></i>
+                <span>Django Admin</span>
+            </a>
+        </nav>
+
+        <div class="fd-sidebar-promo">
+            <div class="fd-promo-icon">
+                <i class="bi bi-stars"></i>
+            </div>
+            <h4>Made with care.</h4>
+            <p>Good food begins with a great experience.</p>
+            <a href="{% url 'home' %}">
+                Visit storefront <i class="bi bi-arrow-up-right"></i>
+            </a>
+        </div>
+
+        <div class="fd-profile">
+            <div class="fd-avatar">
+                {{ request.user.username|first|upper }}
+            </div>
+            <div class="fd-profile-info">
+                <strong>{{ request.user.username }}</strong>
+                <small>Administrator</small>
+            </div>
+            <a href="/admin/logout/" title="Logout" class="fd-logout">
+                <i class="bi bi-box-arrow-right"></i>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="fd-main">
+
+        <!-- TOP HEADER -->
+        <header class="fd-topbar">
+            <div class="fd-page-title">
+                <div class="fd-breadcrumb">
+                    FOODIE <i class="bi bi-chevron-right"></i> DASHBOARD
+                </div>
+                <h1>Your kitchen, <span>your rules.</span></h1>
+                <p>Manage your food business from one beautiful space.</p>
+            </div>
+
+            <div class="fd-top-actions">
+                <span class="fd-status-pill">
+                    <span></span> System active
+                </span>
+                <a href="{% url 'home' %}" class="fd-store-btn">
+                    <i class="bi bi-arrow-up-right"></i>
+                    <span>View Store</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- WELCOME BANNER -->
+        <section class="fd-hero">
+            <div class="fd-hero-content">
+                <span class="fd-hero-kicker">
+                    <i class="bi bi-sun"></i> YOUR DAILY BRIEFING
+                </span>
+
+                <h2>A fresh day to serve<br>something <em>delicious.</em></h2>
+
+                <p>
+                    Welcome back, {{ request.user.username }}.
+                    Your Foodie workspace is ready.
+                </p>
+
+                <a href="/admin/foodapp/food/add/" class="fd-primary-btn">
+                    <i class="bi bi-plus-lg"></i> Add new food
+                </a>
+            </div>
+
+            <div class="fd-hero-art" aria-hidden="true">
+                <div class="fd-art-ring fd-ring-one"></div>
+                <div class="fd-art-ring fd-ring-two"></div>
+                <div class="fd-art-orbit">
+                    <i class="bi bi-egg-fried"></i>
+                </div>
+                <span class="fd-art-spark fd-spark-one">✦</span>
+                <span class="fd-art-spark fd-spark-two">✧</span>
+                <span class="fd-art-caption">GOOD FOOD<br>GOOD MOOD</span>
+            </div>
+        </section>
+
+        <!-- SECTION TITLE -->
+        <div class="fd-section-head">
+            <div>
+                <span class="fd-overline">THE BIG PICTURE</span>
+                <h2>Business overview</h2>
+                <p>A snapshot of what's inside your platform.</p>
+            </div>
+            <div class="fd-date-chip">
+                <i class="bi bi-calendar3"></i>
+                <span>Dashboard overview</span>
+            </div>
+        </div>
+
+        <!-- STATISTICS -->
+        <section class="fd-stats-grid">
+
+            <article class="fd-stat-card fd-stat-featured">
+                <div class="fd-stat-top">
+                    <span class="fd-stat-label">Total food items</span>
+                    <span class="fd-stat-icon">
+                        <i class="bi bi-egg-fried"></i>
+                    </span>
+                </div>
+                <div class="fd-stat-number">{{ total_foods }}</div>
+                <div class="fd-stat-bottom">
+                    <span>All menu items</span>
+                    <i class="bi bi-arrow-up-right"></i>
+                </div>
+                <div class="fd-stat-decoration"></div>
+            </article>
+
+            <article class="fd-stat-card">
+                <div class="fd-stat-top">
+                    <span class="fd-stat-label">Available foods</span>
+                    <span class="fd-stat-icon fd-icon-green">
+                        <i class="bi bi-check2-circle"></i>
+                    </span>
+                </div>
+                <div class="fd-stat-number">{{ available_foods }}</div>
+                <div class="fd-stat-bottom">
+                    <span>Ready to order</span>
+                    <span class="fd-mini-dot"></span>
+                </div>
+            </article>
+
+            <article class="fd-stat-card">
+                <div class="fd-stat-top">
+                    <span class="fd-stat-label">Categories</span>
+                    <span class="fd-stat-icon fd-icon-gold">
+                        <i class="bi bi-grid"></i>
+                    </span>
+                </div>
+                <div class="fd-stat-number">{{ total_categories }}</div>
+                <div class="fd-stat-bottom">
+                    <span>Food collections</span>
+                    <i class="bi bi-arrow-up-right"></i>
+                </div>
+            </article>
+
+            <article class="fd-stat-card">
+                <div class="fd-stat-top">
+                    <span class="fd-stat-label">Registered users</span>
+                    <span class="fd-stat-icon fd-icon-dark">
+                        <i class="bi bi-people"></i>
+                    </span>
+                </div>
+                <div class="fd-stat-number">{{ total_users }}</div>
+                <div class="fd-stat-bottom">
+                    <span>Platform accounts</span>
+                    <i class="bi bi-arrow-up-right"></i>
+                </div>
+            </article>
+
+        </section>
+
+        <!-- LOWER CONTENT -->
+        <section class="fd-lower-grid">
+
+            <!-- RECENT FOODS TABLE -->
+            <div class="fd-panel fd-food-panel">
+                <div class="fd-panel-header">
+                    <div>
+                        <span class="fd-overline">YOUR MENU</span>
+                        <h3>Recently added</h3>
+                    </div>
+                    <a href="/admin/foodapp/food/" class="fd-text-link">
+                        View all <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="fd-table-wrap">
+                    <table class="fd-food-table">
+                        <thead>
+                            <tr>
+                                <th>FOOD ITEM</th>
+                                <th>CATEGORY</th>
+                                <th>PRICE</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in recent_foods %}
+                            <tr>
+                                <td>
+                                    <div class="fd-food-item">
+                                        {% if item.image %}
+                                        <img src="{{ item.image.url }}"
+                                             alt="{{ item.name }}">
+                                        {% else %}
+                                        <span class="fd-food-placeholder">
+                                            <i class="bi bi-cup-hot"></i>
+                                        </span>
+                                        {% endif %}
+                                        <strong>{{ item.name }}</strong>
+                                    </div>
+                                </td>
+                                <td>{{ item.category.name }}</td>
+                                <td class="fd-price">₹{{ item.price }}</td>
+                                <td>
+                                    {% if item.is_available %}
+                                    <span class="fd-badge fd-badge-available">
+                                        <span></span> Available
+                                    </span>
+                                    {% else %}
+                                    <span class="fd-badge fd-badge-unavailable">
+                                        <span></span> Unavailable
+                                    </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="fd-empty">
+                                    <i class="bi bi-inbox"></i>
+                                    <strong>Your menu starts here</strong>
+                                    <p>Add your first food item to see it here.</p>
+                                    <a href="/admin/foodapp/food/add/">
+                                        Add food item
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- QUICK ACTIONS -->
+            <aside class="fd-panel fd-quick-panel">
+                <div class="fd-panel-header">
+                    <div>
+                        <span class="fd-overline">SHORTCUTS</span>
+                        <h3>Quick actions</h3>
+                    </div>
+                    <span class="fd-shortcut-icon">
+                        <i class="bi bi-lightning-charge"></i>
+                    </span>
+                </div>
+
+                <a href="/admin/foodapp/food/add/" class="fd-action-link">
+                    <span class="fd-action-icon fd-action-wine">
+                        <i class="bi bi-plus-circle"></i>
+                    </span>
+                    <span class="fd-action-copy">
+                        <strong>Add a food item</strong>
+                        <small>Expand your menu</small>
+                    </span>
+                    <i class="bi bi-arrow-up-right fd-action-arrow"></i>
+                </a>
+
+                <a href="/admin/foodapp/category/add/" class="fd-action-link">
+                    <span class="fd-action-icon fd-action-gold">
+                        <i class="bi bi-collection"></i>
+                    </span>
+                    <span class="fd-action-copy">
+                        <strong>Create category</strong>
+                        <small>Organise your menu</small>
+                    </span>
+                    <i class="bi bi-arrow-up-right fd-action-arrow"></i>
+                </a>
+
+                <a href="/admin/auth/user/" class="fd-action-link">
+                    <span class="fd-action-icon fd-action-green">
+                        <i class="bi bi-person-lines-fill"></i>
+                    </span>
+                    <span class="fd-action-copy">
+                        <strong>Manage users</strong>
+                        <small>View registered accounts</small>
+                    </span>
+                    <i class="bi bi-arrow-up-right fd-action-arrow"></i>
+                </a>
+
+                <a href="/admin/" class="fd-action-link">
+                    <span class="fd-action-icon fd-action-neutral">
+                        <i class="bi bi-gear"></i>
+                    </span>
+                    <span class="fd-action-copy">
+                        <strong>Admin controls</strong>
+                        <small>Open Django administration</small>
+                    </span>
+                    <i class="bi bi-arrow-up-right fd-action-arrow"></i>
+                </a>
+
+                <div class="fd-tip">
+                    <i class="bi bi-info-circle"></i>
+                    <p><strong>Little reminder</strong><br>
+                    Keep food prices and availability up to date.</p>
+                </div>
+            </aside>
+
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="fd-dashboard-footer">
+            <span>FOODIE <b>ADMIN STUDIO</b></span>
+            <span>Thoughtfully made for your food business <i class="bi bi-heart-fill"></i></span>
+        </footer>
+
+    </main>
+</div>
+{% endblock %}

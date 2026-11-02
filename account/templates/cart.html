@@ -1,0 +1,166 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Cart | Foodie{% endblock %}
+
+{% block content %}
+<section class="cart-page">
+    <div class="cart-container">
+
+        <div class="cart-heading">
+            <div>
+                <span class="cart-eyebrow">YOUR FOOD, YOUR WAY</span>
+                <h1>My Shopping Cart</h1>
+                <p>Freshly selected favorites, ready for you.</p>
+            </div>
+
+            <a href="{% url 'home' %}" class="continue-shopping">
+                ← Continue Shopping
+            </a>
+        </div>
+
+        <div class="cart-layout">
+
+            <!-- CART ITEMS -->
+            <div class="cart-items-panel">
+
+                <div class="cart-panel-title">
+                    <h2>Your Items</h2>
+                    <span>{{ cart_items|length }} items</span>
+                </div>
+
+                {% for item in cart_items %}
+                <article class="cart-item">
+
+                    <div class="cart-product-image">
+                        {% if item.food.image %}
+                            <img src="{{ item.food.image.url }}"
+                                 alt="{{ item.food.name }}">
+                        {% else %}
+                            <div class="cart-no-image">🍔</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="cart-product-info">
+                        <span class="cart-product-label">
+                            FRESHLY PREPARED
+                        </span>
+
+                        <h3>{{ item.food.name }}</h3>
+
+                        <p class="cart-product-description">
+                            {{ item.food.short_description|default:"Delicious food made fresh for you." }}
+                        </p>
+
+                        <div class="cart-item-bottom">
+
+                            <div class="cart-quantity">
+
+                                <!-- DECREASE QUANTITY -->
+                                <form method="post"
+                                      action="{% url 'update_cart' item.food.id 'decrease' %}">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                            aria-label="Decrease quantity">
+                                        −
+                                    </button>
+                                </form>
+
+                                <span>{{ item.quantity }}</span>
+
+                                <!-- INCREASE QUANTITY -->
+                                <form method="post"
+                                      action="{% url 'update_cart' item.food.id 'increase' %}">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                            aria-label="Increase quantity">
+                                        +
+                                    </button>
+                                </form>
+
+                            </div>
+
+                            <strong class="cart-item-price">
+                                ₹{{ item.item_total|floatformat:2 }}
+                            </strong>
+
+                        </div>
+
+                        <!-- REMOVE ITEM -->
+                        <form method="post"
+                              action="{% url 'remove_from_cart' item.food.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="remove-item">
+                                🗑 Remove item
+                            </button>
+                        </form>
+
+                    </div>
+                </article>
+
+                {% empty %}
+                <div class="empty-cart">
+                    <div class="empty-cart-icon">🛒</div>
+                    <h2>Your cart is feeling hungry!</h2>
+                    <p>Add your favorite burgers, pizzas and more.</p>
+                    <a href="{% url 'home' %}" class="checkout-btn">
+                        Explore Menu →
+                    </a>
+                </div>
+                {% endfor %}
+
+            </div>
+
+            <!-- BILL SUMMARY -->
+            {% if cart_items %}
+            <aside class="cart-summary">
+
+                <span class="summary-eyebrow">ORDER DETAILS</span>
+                <h2>Bill Summary</h2>
+
+                <div class="summary-line">
+                    <span>Subtotal</span>
+                    <span>₹{{ total|floatformat:2 }}</span>
+                </div>
+
+                <div class="summary-line">
+                    <span>Delivery Fee</span>
+                    <span>₹{{ delivery_fee|floatformat:2 }}</span>
+                </div>
+
+                <div class="summary-line">
+                    <span>Taxes</span>
+                    <span>₹{{ tax|floatformat:2 }}</span>
+                </div>
+
+                <div class="summary-divider"></div>
+
+                <div class="summary-total">
+                    <span>Total Amount</span>
+                    <strong>₹{{ grand_total|floatformat:2 }}</strong>
+                </div>
+
+                <p class="summary-note">
+                    ✦ Fresh food, carefully packed and delivered.
+                </p>
+
+               
+         <a href="{% url 'checkout' %}" class="checkout-btn">
+              Proceed to Checkout
+            <span>→</span>
+            </a>
+
+
+                <div class="secure-checkout">
+                    <span>🔒</span>
+                    <span>Safe and secure checkout</span>
+                </div>
+
+            </aside>
+            {% endif %}
+
+        </div>
+    </div>
+</section>
+{% endblock %}

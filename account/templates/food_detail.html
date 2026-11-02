@@ -1,0 +1,240 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ food.name }} | Foodie{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb -->
+<section class="fd-breadcrumb">
+    <div class="container">
+        <a href="{% url 'home' %}">Home</a>
+        <i class="bi bi-chevron-right"></i>
+        <a href="">Food Menu</a>
+        <i class="bi bi-chevron-right"></i>
+        <span>{{ food.name }}</span>
+    </div>
+</section>
+
+<!-- Food Detail -->
+<section class="fd-section">
+    <div class="container">
+
+        <div class="fd-main-card">
+
+            <!-- Food Image -->
+            <div class="fd-image-panel">
+
+                {% if food.is_popular %}
+                    <span class="fd-popular-badge">
+                        <i class="bi bi-fire"></i> Popular Choice
+                    </span>
+                {% endif %}
+
+                {% if food.image %}
+                    <img src="{{ food.image.url }}"
+                         alt="{{ food.name }}"
+                         class="fd-main-image">
+                {% else %}
+                    <div class="fd-no-image">
+                        <i class="bi bi-egg-fried"></i>
+                        <span>Food image unavailable</span>
+                    </div>
+                {% endif %}
+
+                <div class="fd-image-caption">
+                    <i class="bi bi-patch-check-fill"></i>
+                    Made for your cravings
+                </div>
+
+            </div>
+
+            <!-- Food Information -->
+            <div class="fd-info-panel">
+
+                <div class="fd-category">
+                    <i class="bi bi-grid"></i>
+                    {{ food.category.name }}
+                </div>
+
+                <h1 class="fd-title">{{ food.name }}</h1>
+
+                <div class="fd-rating-row">
+                    <span class="fd-rating">
+                        <i class="bi bi-star-fill"></i>
+                        {{ food.rating|default:"0.0" }}
+                    </span>
+                    <span class="fd-rating-label">Foodie rating</span>
+                </div>
+
+                <p class="fd-short-description">
+                    {{ food.short_description|default:"Freshly prepared and full of flavour." }}
+                </p>
+
+                <div class="fd-price-box">
+                    <div class="fd-price-line">
+                        <span class="fd-current-price">
+                            ₹{{ food.price }}
+                        </span>
+
+                        {% if food.old_price and food.old_price > food.price %}
+                            <span class="fd-old-price">
+                                ₹{{ food.old_price }}
+                            </span>
+
+                            <span class="fd-save-badge">
+                                Save ₹{{ food.old_price|floatformat:2 }}
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <span class="fd-price-note">
+                        <i class="bi bi-check-circle-fill"></i>
+                        Price shown per item
+                    </span>
+                </div>
+
+                <div class="fd-availability">
+                    {% if food.is_available %}
+                        <span class="fd-status fd-in-stock">
+                            <i class="bi bi-check-circle-fill"></i>
+                            Available to order
+                        </span>
+                    {% else %}
+                        <span class="fd-status fd-out-stock">
+                            <i class="bi bi-x-circle-fill"></i>
+                            Currently unavailable
+                        </span>
+                    {% endif %}
+                </div>
+
+                <!-- Add to Cart -->
+                {% if food.is_available %}
+                    <form action="{% url 'cart_add' food.id %}"
+                          method="POST"
+                          class="fd-cart-form">
+
+                        {% csrf_token %}
+
+                        <button type="submit" class="fd-add-cart">
+                            <i class="bi bi-bag-plus"></i>
+                            Add to Cart
+                        </button>
+
+                        <a href="{% url 'cart' %}" class="fd-cart-link">
+                            <i class="bi bi-bag"></i>
+                            View Cart
+                        </a>
+
+                    </form>
+                {% else %}
+                    <button type="button"
+                            class="fd-add-cart fd-disabled"
+                            disabled>
+                        Currently Unavailable
+                    </button>
+                {% endif %}
+
+                <div class="fd-trust-points">
+                    <div>
+                        <i class="bi bi-heart"></i>
+                        <span>Made with care</span>
+                    </div>
+                    <div>
+                        <i class="bi bi-shield-check"></i>
+                        <span>Easy ordering</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="fd-description-card">
+            <span class="fd-eyebrow">DISCOVER THE FLAVOUR</span>
+            <h2>About this dish</h2>
+
+            <p>
+                {% if food.description %}
+                    {{ food.description|linebreaksbr }}
+                {% else %}
+                    {{ food.short_description|default:"A delicious choice for your next meal." }}
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Related Foods -->
+        {% if related_foods %}
+        <section class="fd-related-section">
+
+            <div class="fd-section-heading">
+                <div>
+                    <span class="fd-eyebrow">MORE TO LOVE</span>
+                    <h2>You may also like</h2>
+                </div>
+
+                <a href="" class="fd-view-all">
+                    Explore menu <i class="bi bi-arrow-up-right"></i>
+                </a>
+            </div>
+
+            <div class="row g-4">
+
+                {% for item in related_foods %}
+                <div class="col-6 col-lg-3">
+
+                    <article class="fd-food-card">
+
+                        <a href="{% url 'food_detail' item.id %}"
+                           class="fd-card-image">
+
+                            {% if item.image %}
+                                <img src="{{ item.image.url }}"
+                                     alt="{{ item.name }}"
+                                     loading="lazy">
+                            {% else %}
+                                <div class="fd-card-no-image">
+                                    <i class="bi bi-egg-fried"></i>
+                                </div>
+                            {% endif %}
+
+                        </a>
+
+                        <div class="fd-card-content">
+
+                            <span class="fd-card-category">
+                                {{ item.category.name }}
+                            </span>
+
+                            <h3>
+                                <a href="{% url 'food_detail' item.id %}">
+                                    {{ item.name }}
+                                </a>
+                            </h3>
+
+                            <div class="fd-card-bottom">
+                                <strong>₹{{ item.price }}</strong>
+
+                                <a href="{% url 'food_detail' item.id %}"
+                                   class="fd-card-arrow"
+                                   aria-label="View {{ item.name }}">
+                                    <i class="bi bi-arrow-up-right"></i>
+                                </a>
+                            </div>
+
+                        </div>
+                    </article>
+
+                </div>
+                {% endfor %}
+
+            </div>
+        </section>
+        {% endif %}
+
+    </div>
+</section>
+
+{% endblock %}
+

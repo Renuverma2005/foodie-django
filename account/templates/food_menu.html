@@ -1,0 +1,77 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Foodie | Food Menu{% endblock %}
+
+{% block content %}
+
+{% if search_query %}
+    <p>
+        Search results for "{{ search_query }}"
+    </p>
+{% endif %}
+
+<section class="fm-hero">
+    <div class="fm-hero-content">
+        <span class="fm-label">FRESHLY PREPARED · FULL OF FLAVOUR</span>
+        <h1>Discover Our <span>Food Menu</span></h1>
+        <p>Find your favourites, explore new flavours, and enjoy every bite.</p>
+    </div>
+</section>
+
+<section class="fm-section">
+    <div class="fm-heading">
+        <div>
+            <span class="fm-subtitle">MADE WITH LOVE</span>
+            <h2>Explore Our Menu</h2>
+        </div>
+        <p>{{ foods|length }} delicious items</p>
+    </div>
+
+    <div class="fm-grid">
+        {% for food in foods %}
+        <article class="fm-card">
+
+            <a href="{% url 'food_detail' food.id %}" class="fm-image-link">
+                {% if food.image %}
+                    <img src="{{ food.image.url }}"
+                         alt="{{ food.name }}"
+                         class="fm-image">
+                {% else %}
+                    <div class="fm-no-image">No Image Available</div>
+                {% endif %}
+            </a>
+
+            <div class="fm-card-body">
+                <h3>{{ food.name }}</h3>
+
+                {% if food.short_description %}
+                    <p>{{ food.short_description|truncatewords:16 }}</p>
+                {% else %}
+                    <p>Freshly prepared and full of delicious flavour.</p>
+                {% endif %}
+
+                <div class="fm-card-bottom">
+                    <span class="fm-price">₹{{ food.price }}</span>
+
+                    <a href="{% url 'food_detail' food.id %}"
+                       class="fm-view-btn">
+                        View Details
+                        <i class="bi bi-arrow-up-right"></i>
+                    </a>
+                </div>
+            </div>
+
+        </article>
+        {% empty %}
+        <div class="fm-empty">
+            <i class="bi bi-egg-fried"></i>
+            <h3>Our menu is getting ready!</h3>
+            <p>Please check back soon for delicious food.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock %}

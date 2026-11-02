@@ -1,0 +1,109 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Login | Foodie{% endblock %}
+
+{% block content %}
+
+
+<section class="fl-login-page">
+    <div class="fl-login-card">
+
+        <div class="fl-login-visual">
+            <div class="fl-login-brand">
+                <i class="bi bi-egg-fried"></i>
+                <span>Foodie</span>
+            </div>
+
+            <div class="fl-login-visual-content">
+                <span class="fl-login-tag">GOOD FOOD. GOOD MOOD.</span>
+                <h1>Your next<br>favourite meal<br>is waiting.</h1>
+                <p>Fresh flavours, delicious moments, delivered right to your door.</p>
+            </div>
+
+            <div class="fl-login-food-icon">
+                <i class="bi bi-cup-hot"></i>
+                <i class="bi bi-heart-fill"></i>
+                <i class="bi bi-stars"></i>
+            </div>
+        </div>
+
+        <div class="fl-login-form-side">
+            <div class="fl-login-heading">
+                <span class="fl-login-small-title">WELCOME BACK</span>
+                <h2>Login to Foodie</h2>
+                <p>Enter your details to continue your food journey.</p>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="fl-login-message">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if form.errors %}
+                <div class="fl-login-message">
+                    Your username or password is incorrect. Please try again.
+                </div>
+            {% endif %}
+
+            <form method="post" class="fl-login-form">
+                {% csrf_token %}
+
+                <div class="fl-login-field">
+                    <label for="username">Username</label>
+                    <div class="fl-login-input-wrap">
+                        <i class="bi bi-person"></i>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Enter your username"
+                            autocomplete="username"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="fl-login-field">
+                    <label for="password">Password</label>
+                    <div class="fl-login-input-wrap">
+                        <i class="bi bi-lock"></i>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <button type="submit" class="fl-login-submit">
+                    Login to your account
+                    <i class="bi bi-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="fl-login-divider">
+                <span>NEW TO FOODIE?</span>
+            </div>
+
+            <p class="fl-login-register">
+                Don't have an account?
+                <a href="{% url 'register' %}">Sign Up</a>
+            </p>
+
+            <a href="{% url 'home' %}" class="fl-login-back">
+                <i class="bi bi-arrow-left"></i>
+                Back to Home
+            </a>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

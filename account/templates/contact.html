@@ -1,0 +1,161 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Contact Us | Foodie{% endblock %}
+
+{% block content %}
+
+
+<section class="fc-hero">
+    <div class="fc-hero-inner">
+        <span class="fc-eyebrow">
+            <i class="bi bi-chat-heart"></i> WE'RE HERE FOR YOU
+        </span>
+        <h1>Good food starts<br>with a <em>conversation.</em></h1>
+        <p>Questions about your order, a special request, or just want
+           to say hello? Our team would love to hear from you.</p>
+        <div class="fc-hero-note">
+            <span class="fc-note-icon"><i class="bi bi-heart-fill"></i></span>
+            Made with care. Served with love.
+        </div>
+    </div>
+    <div class="fc-hero-decoration fc-decoration-one"></div>
+    <div class="fc-hero-decoration fc-decoration-two"></div>
+    <div class="fc-hero-number">FOODIE / 01</div>
+</section>
+
+<section class="fc-contact-section">
+    <div class="fc-contact-grid">
+
+        <aside class="fc-info-panel">
+            <span class="fc-section-tag">GET IN TOUCH</span>
+            <h2>Let's make<br>things <em>delicious.</em></h2>
+            <p class="fc-info-description">
+                We're always happy to help. Choose the easiest way
+                to reach our team.
+            </p>
+
+            <div class="fc-info-item">
+                <div class="fc-info-icon">
+                    <i class="bi bi-envelope-paper"></i>
+                </div>
+                <div>
+                    <span class="fc-info-label">EMAIL US</span>
+                    <a href="mailto:support@foodie.com">support@foodie.com</a>
+                    <small>For orders and general questions</small>
+                </div>
+            </div>
+
+            <div class="fc-info-item">
+                <div class="fc-info-icon">
+                    <i class="bi bi-telephone"></i>
+                </div>
+                <div>
+                    <span class="fc-info-label">CALL OUR TEAM</span>
+                    <a href="tel:+919876543210">+91 98765 43210</a>
+                    <small>Replace with your actual support number</small>
+                </div>
+            </div>
+
+            <div class="fc-info-item">
+                <div class="fc-info-icon">
+                    <i class="bi bi-clock"></i>
+                </div>
+                <div>
+                    <span class="fc-info-label">SUPPORT HOURS</span>
+                    <strong>Monday – Saturday</strong>
+                    <small>10:00 AM – 7:00 PM</small>
+                </div>
+            </div>
+
+            <div class="fc-social-note">
+                <i class="bi bi-stars"></i>
+                <div>
+                    <strong>Your feedback matters.</strong>
+                    <p>Every message helps us serve you better.</p>
+                </div>
+            </div>
+        </aside>
+
+        <div class="fc-form-panel">
+            <div class="fc-form-heading">
+                <span class="fc-section-tag">SEND A MESSAGE</span>
+                <h2>Tell us what's on<br>your <em>mind.</em></h2>
+                <p>Fill in the details below and we'll get back to you.</p>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="fc-alert fc-alert-success">
+                        <i class="bi bi-check-circle-fill"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" class="fc-form">
+                {% csrf_token %}
+
+                <div class="fc-field-row">
+                    <div class="fc-field">
+                        <label for="fc-name">Your name <span>*</span></label>
+                        <input type="text" id="fc-name" name="name"
+                               placeholder="e.g. Riya Sharma"
+                               autocomplete="name" required>
+                    </div>
+
+                    <div class="fc-field">
+                        <label for="fc-email">Email address <span>*</span></label>
+                        <input type="email" id="fc-email" name="email"
+                               placeholder="you@example.com"
+                               autocomplete="email" required>
+                    </div>
+                </div>
+
+                <div class="fc-field">
+                    <label for="fc-subject">What is this about? <span>*</span></label>
+                    <select id="fc-subject" name="subject" required>
+                        <option value="" disabled selected>
+                            Select a topic
+                        </option>
+                        <option value="Order enquiry">Order enquiry</option>
+                        <option value="Delivery issue">Delivery issue</option>
+                        <option value="Food feedback">Food feedback</option>
+                        <option value="Payment issue">Payment issue</option>
+                        <option value="Other">Something else</option>
+                    </select>
+                </div>
+
+                <div class="fc-field">
+                    <label for="fc-message">Your message <span>*</span></label>
+                    <textarea id="fc-message" name="message" rows="5"
+                              placeholder="Tell us how we can help..."
+                              required></textarea>
+                </div>
+
+                <label class="fc-privacy">
+                    <i class="bi bi-shield-check"></i>
+                    Your details will only be used to respond to your enquiry.
+                </label>
+
+                <button type="submit" class="fc-submit">
+                    Send your message
+                    <i class="bi bi-arrow-up-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<section class="fc-bottom-strip">
+    <div class="fc-strip-icon"><i class="bi bi-egg-fried"></i></div>
+    <div>
+        <span>THE FOODIE PROMISE</span>
+        <h3>Every great experience deserves great support.</h3>
+    </div>
+    <a href="{% url 'food_menu' %}" class="fc-menu-link">
+        Explore our menu <i class="bi bi-arrow-right"></i>
+    </a>
+</section>
+{% endblock %}

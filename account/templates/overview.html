@@ -1,0 +1,172 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Overview | Foodie Admin{% endblock %}
+
+{% block content %}
+
+<section class="ov-page">
+
+    <!-- PAGE HEADER -->
+    <div class="ov-header">
+        <div>
+            <span class="ov-eyebrow">FOODIE ADMINISTRATION</span>
+            <h1>Dashboard Overview</h1>
+            <p>Welcome back! Here's what's happening with your restaurant.</p>
+        </div>
+
+        <div class="ov-date">
+            <i class="bi bi-calendar3"></i>
+            {% now "d M Y" %}
+        </div>
+    </div>
+
+    <!-- STATISTICS -->
+    <div class="ov-stats">
+
+        <div class="ov-card">
+            <div class="ov-icon ov-burgundy">
+                <i class="bi bi-bag-check"></i>
+            </div>
+            <div>
+                <span>Total Orders</span>
+                <h2>{{ total_orders|default:0 }}</h2>
+                <small>All customer orders</small>
+            </div>
+        </div>
+
+        <div class="ov-card">
+            <div class="ov-icon ov-gold">
+                <i class="bi bi-currency-rupee"></i>
+            </div>
+            <div>
+                <span>Total Revenue</span>
+                <h2>₹{{ total_revenue|default:0|floatformat:2 }}</h2>
+                <small>From delivered orders</small>
+            </div>
+        </div>
+
+        <div class="ov-card">
+            <div class="ov-icon ov-green">
+                <i class="bi bi-people"></i>
+            </div>
+            <div>
+                <span>Total Customers</span>
+                <h2>{{ total_customers|default:0 }}</h2>
+                <small>Registered customers</small>
+            </div>
+        </div>
+
+        <div class="ov-card">
+            <div class="ov-icon ov-orange">
+                <i class="bi bi-cup-hot"></i>
+            </div>
+            <div>
+                <span>Total Food Items</span>
+                <h2>{{ total_foods|default:0 }}</h2>
+                <small>Available food products</small>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ORDER SUMMARY -->
+    <div class="ov-section">
+        <div class="ov-section-heading">
+            <div>
+                <h3>Order Summary</h3>
+                <p>Current order status overview</p>
+            </div>
+        </div>
+
+        <div class="ov-order-grid">
+
+            <div class="ov-order-box">
+                <span class="ov-status pending"></span>
+                <div>
+                    <small>Pending Orders</small>
+                    <h3>{{ pending_orders|default:0 }}</h3>
+                </div>
+            </div>
+
+            <div class="ov-order-box">
+                <span class="ov-status confirmed"></span>
+                <div>
+                    <small>Confirmed Orders</small>
+                    <h3>{{ confirmed_orders|default:0 }}</h3>
+                </div>
+            </div>
+
+            <div class="ov-order-box">
+                <span class="ov-status delivered"></span>
+                <div>
+                    <small>Delivered Orders</small>
+                    <h3>{{ delivered_orders|default:0 }}</h3>
+                </div>
+            </div>
+
+            <div class="ov-order-box">
+                <span class="ov-status cancelled"></span>
+                <div>
+                    <small>Cancelled Orders</small>
+                    <h3>{{ cancelled_orders|default:0 }}</h3>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- RECENT ORDERS -->
+    <div class="ov-section">
+        <div class="ov-section-heading">
+            <div>
+                <h3>Recent Orders</h3>
+                <p>Latest customer orders</p>
+            </div>
+
+            <a href="" class="ov-view-all">
+                View All <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="ov-table-wrapper">
+            <table class="ov-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for order in recent_orders %}
+                    <tr>
+                        <td>#{{ order.order_number|default:order.id }}</td>
+                        <td>{{ order.full_name|default:order.customer.username }}</td>
+                        <td>{{ order.created_at|date:"d M Y" }}</td>
+                        <td>₹{{ order.total }}</td>
+                        <td>
+                            <span class="ov-table-status">
+                                {{ order.status|title }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="ov-empty">
+                            No orders available yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+
+{% endblock %}

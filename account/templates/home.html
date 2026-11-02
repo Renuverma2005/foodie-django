@@ -1,0 +1,257 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Foodie | Food & Categories{% endblock %}
+
+{% block content %}
+
+<!-- FOOD CATEGORIES -->
+<section class="fh-section fh-category-section" id="fh-categories">
+    <div class="container">
+
+        <div class="fh-section-heading">
+            <div>
+                <span class="fh-eyebrow">EXPLORE OUR MENU</span>
+                <h2>Food Categories</h2>
+                <p>Discover something delicious for every craving.</p>
+            </div>
+        </div>
+
+        <div class="fh-category-grid">
+            {% for category in categories %}
+                <a href="?category={{ category.id }}#fh-foods"
+                   class="fh-category-card">
+
+                    <div class="fh-category-image">
+                        {% if category.image %}
+                            <img src="{{ category.image.url }}"
+                                 alt="{{ category.name }}"
+                                 loading="lazy">
+                        {% else %}
+                            <div class="fh-placeholder">
+                                <i class="bi bi-egg-fried"></i>
+                            </div>
+                        {% endif %}
+
+                        <span class="fh-category-arrow">
+                            <i class="bi bi-arrow-up-right"></i>
+                        </span>
+                    </div>
+
+                    <h3>{{ category.name }}</h3>
+                </a>
+            {% empty %}
+                <div class="fh-empty-state">
+                    <h3>No categories available</h3>
+                    <p>Add categories from Django Admin.</p>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
+
+<!-- FOOD ITEMS -->
+<section class="fh-section fh-popular-section" id="fh-foods">
+    <div class="container">
+
+        <div class="fh-section-heading">
+            <div>
+                <span class="fh-eyebrow">MADE FRESH FOR YOU</span>
+
+                {% if selected_category %}
+                    <h2>{{ selected_category.name }}</h2>
+                    <p>Explore delicious food from this category.</p>
+                    <a href="{% url 'home' %}#fh-foods">View all foods</a>
+                {% else %}
+                    <h2>Food Items</h2>
+                    <p>Delicious food, freshly prepared and ready to enjoy.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="fh-food-grid">
+
+            {% for food in popular_foods %}
+                <article class="fh-food-card">
+
+                    <!-- FOOD IMAGE -->
+                    <a href="{% url 'food_detail' food.id %}"
+                       class="fh-food-image">
+
+                        {% if food.image %}
+                            <img src="{{ food.image.url }}"
+                                 alt="{{ food.name }}"
+                                 loading="lazy">
+                        {% else %}
+                            <div class="fh-placeholder">
+                                <i class="bi bi-egg-fried"></i>
+                            </div>
+                        {% endif %}
+
+                        <span class="fh-view-details">
+                            <i class="bi bi-eye"></i>
+                            View Details
+                        </span>
+                    </a>
+
+                    <!-- FOOD INFORMATION -->
+                    <div class="fh-food-info">
+
+                        <div class="fh-food-meta">
+                            <span class="fh-food-category">
+                                {{ food.category.name|default:"Food" }}
+                            </span>
+
+                            {% if food.rating %}
+                                <span class="fh-rating">
+                                    <i class="bi bi-star-fill"></i>
+                                    {{ food.rating }}
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <h3>
+                            <a href="{% url 'food_detail' food.id %}">
+                                {{ food.name }}
+                            </a>
+                        </h3>
+
+                        <p class="fh-food-description">
+                            {{ food.short_description|default:"Freshly prepared and delicious."|truncatechars:85 }}
+                        </p>
+
+                        <!-- PRICE -->
+                        <div class="fh-price">
+                            <strong>₹{{ food.price|floatformat:2 }}</strong>
+
+                            {% if food.old_price and food.old_price > food.price %}
+                                <del>₹{{ food.old_price|floatformat:2 }}</del>
+                            {% endif %}
+                        </div>
+
+                        <!-- QUANTITY + ADD TO CART -->
+                        {% if food.is_available %}
+
+                            <form method="post"
+                                  action="{% url 'cart_add' food.id %}"
+                                  class="fh-cart-form">
+
+                                {% csrf_token %}
+
+                                <div class="fh-cart-controls">
+
+                                    <div class="fh-quantity-control">
+                                        <button type="button"
+                                                class="fh-qty-btn fh-qty-minus"
+                                                aria-label="Decrease quantity">
+                                            <i class="bi bi-dash-lg"></i>
+                                        </button>
+
+                                        <input type="number"
+                                               name="quantity"
+                                               class="fh-qty-input"
+                                               value="1"
+                                               min="1"
+                                               max="99"
+                                               readonly
+                                               aria-label="Food quantity">
+
+                                        <button type="button"
+                                                class="fh-qty-btn fh-qty-plus"
+                                                aria-label="Increase quantity">
+                                            <i class="bi bi-plus-lg"></i>
+                                        </button>
+                                    </div>
+
+                                    <button type="submit" class="fh-add-btn">
+                                        <i class="bi bi-bag-plus"></i>
+                                        <span>Add to Cart</span>
+                                    </button>
+
+                                </div>
+                            </form>
+
+                        {% else %}
+
+                            <div class="fh-unavailable">
+                                <i class="bi bi-clock-history"></i>
+                                Currently Unavailable
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+                </article>
+
+            {% empty %}
+                <div class="fh-empty-state">
+                    <i class="bi bi-egg"></i>
+                    <h3>No food items available</h3>
+                    <p>
+                        {% if selected_category %}
+                            No available food items in this category.
+                        {% else %}
+                            Add food items from Django Admin.
+                        {% endif %}
+                    </p>
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+<!-- QUANTITY BUTTON FUNCTIONALITY -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    document.querySelectorAll(".fh-cart-form").forEach(function (form) {
+
+        const minusButton = form.querySelector(".fh-qty-minus");
+        const plusButton = form.querySelector(".fh-qty-plus");
+        const quantityInput = form.querySelector(".fh-qty-input");
+
+        if (!minusButton || !plusButton || !quantityInput) {
+            return;
+        }
+
+        minusButton.addEventListener("click", function () {
+            let quantity = parseInt(quantityInput.value, 10) || 1;
+
+            if (quantity > 1) {
+                quantityInput.value = quantity - 1;
+            }
+        });
+
+        plusButton.addEventListener("click", function () {
+            let quantity = parseInt(quantityInput.value, 10) || 1;
+
+            if (quantity < 99) {
+                quantityInput.value = quantity + 1;
+            }
+        });
+
+        form.addEventListener("submit", function (event) {
+            const quantity = parseInt(quantityInput.value, 10);
+
+            if (!Number.isInteger(quantity) || quantity < 1 || quantity > 99) {
+                event.preventDefault();
+                alert("Please select a quantity between 1 and 99.");
+            }
+        });
+
+    });
+
+});
+</script>
+
+{% endblock %}

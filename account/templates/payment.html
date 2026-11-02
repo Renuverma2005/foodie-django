@@ -1,0 +1,235 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Payment | Foodie{% endblock %}
+
+{% block extra_css %}
+
+{% endblock %}
+
+{% block content %}
+
+<main class="pm-page">
+    <div class="container">
+
+        <!-- Breadcrumb -->
+        <nav class="pm-breadcrumb" aria-label="Breadcrumb">
+            <a href="{% url 'home' %}">Home</a>
+            <span>/</span>
+            <span>Payment</span>
+        </nav>
+
+        <!-- Page Heading -->
+        <section class="pm-heading">
+            <span class="pm-eyebrow">FOODIE CHECKOUT EXPERIENCE</span>
+            <h1>Make it a <span>delicious</span> moment.</h1>
+            <p>Choose how you would like to pay for your favourite food.</p>
+        </section>
+
+        <!-- Payment Layout -->
+        <div class="pm-layout">
+
+            <!-- Payment Methods -->
+            <section class="pm-methods-card">
+
+                <div class="pm-card-heading">
+                    <div class="pm-heading-icon">
+                        <i class="bi bi-wallet2"></i>
+                    </div>
+                    <div>
+                        <h2>Choose payment method</h2>
+                        <p>Select your preferred payment option below.</p>
+                    </div>
+                </div>
+
+                <form method="POST" class="pm-form">
+                    {% csrf_token %}
+
+                    <div class="pm-options">
+
+                        <!-- Cash on Delivery -->
+                        <label class="pm-option">
+                            <input
+                                type="radio"
+                                name="payment_method"
+                                value="cod"
+                                {% if payment_method == "cod" or not payment_method %}
+                                    checked
+                                {% endif %}
+                                required
+                            >
+
+                            <span class="pm-option-icon pm-cod-icon">
+                                <i class="bi bi-cash-coin"></i>
+                            </span>
+
+                            <span class="pm-option-content">
+                                <strong>Cash on Delivery</strong>
+                                <small>Pay when your food arrives at your door.</small>
+                                <span class="pm-tag">PAY LATER</span>
+                            </span>
+
+                            <span class="pm-radio-circle"></span>
+                        </label>
+
+                        <!-- UPI -->
+                        <label class="pm-option">
+                            <input
+                                type="radio"
+                                name="payment_method"
+                                value="upi"
+                                {% if payment_method == "upi" %}checked{% endif %}
+                                required
+                            >
+
+                            <span class="pm-option-icon pm-upi-icon">
+                                <i class="bi bi-phone"></i>
+                            </span>
+
+                            <span class="pm-option-content">
+                                <strong>UPI Payment</strong>
+                                <small>Pay using your supported UPI application.</small>
+                                <span class="pm-tag">DIGITAL PAYMENT</span>
+                            </span>
+
+                            <span class="pm-radio-circle"></span>
+                        </label>
+
+                        <!-- Debit / Credit Card -->
+                        <label class="pm-option">
+                            <input
+                                type="radio"
+                                name="payment_method"
+                                value="card"
+                                {% if payment_method == "card" %}checked{% endif %}
+                                required
+                            >
+
+                            <span class="pm-option-icon pm-card-icon">
+                                <i class="bi bi-credit-card-2-front"></i>
+                            </span>
+
+                            <span class="pm-option-content">
+                                <strong>Credit / Debit Card</strong>
+                                <small>Choose card payment at the secure gateway.</small>
+                                <span class="pm-tag">CARD PAYMENT</span>
+                            </span>
+
+                            <span class="pm-radio-circle"></span>
+                        </label>
+
+                    </div>
+
+                    <!-- Payment Information -->
+                    <div class="pm-information">
+                        <i class="bi bi-shield-check"></i>
+                        <p>
+                            Your payment choice will be submitted securely to the
+                            Foodie server. Online payments require a configured
+                            payment gateway.
+                        </p>
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="submit" class="pm-pay-button">
+                        <span>Continue to Payment</span>
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
+
+                    <a href="{% url 'cart' %}" class="pm-back-link">
+                        <i class="bi bi-arrow-left"></i>
+                        Return to cart
+                    </a>
+
+                </form>
+            </section>
+
+            <!-- Order Summary -->
+            <aside class="pm-summary">
+
+                <div class="pm-summary-header">
+                    <span class="pm-summary-label">YOUR ORDER</span>
+                    <h2>Order summary</h2>
+                    <p>A little happiness is on its way.</p>
+                </div>
+
+                {% if cart_items %}
+                <div class="pm-items">
+
+                    {% for item in cart_items %}
+                    <div class="pm-item">
+
+                        {% if item.food.image %}
+                        <img
+                            src="{{ item.food.image.url }}"
+                            alt="{{ item.food.name }}"
+                            class="pm-item-image"
+                        >
+                        {% else %}
+                        <div class="pm-item-placeholder">
+                            <i class="bi bi-egg-fried"></i>
+                        </div>
+                        {% endif %}
+
+                        <div class="pm-item-details">
+                            <strong>{{ item.food.name }}</strong>
+                            <small>Quantity: {{ item.quantity }}</small>
+                        </div>
+
+                        <span class="pm-item-price">
+                            ₹{{ item.line_total|floatformat:2 }}
+                        </span>
+
+                    </div>
+                    {% endfor %}
+
+                </div>
+                {% endif %}
+
+                <div class="pm-price-details">
+                    <div>
+                        <span>Subtotal</span>
+                        <strong>₹{{ subtotal|default:0|floatformat:2 }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Delivery fee</span>
+                        <strong>
+                            {% if delivery_fee %}
+                                ₹{{ delivery_fee|floatformat:2 }}
+                            {% else %}
+                                ₹0.00
+                            {% endif %}
+                        </strong>
+                    </div>
+
+                    <div class="pm-total">
+                        <span>Total payable</span>
+                        <strong>₹{{ total|default:0|floatformat:2 }}</strong>
+                    </div>
+                </div>
+
+                <div class="pm-delivery-note">
+                    <i class="bi bi-bag-heart"></i>
+                    <div>
+                        <strong>Prepared with care</strong>
+                        <p>Fresh food. Lovely moments. Delivered to you.</p>
+                    </div>
+                </div>
+
+            </aside>
+        </div>
+
+        <!-- Footer Note -->
+        <div class="pm-bottom-note">
+            <i class="bi bi-lock"></i>
+            <span>Foodie payment experience</span>
+            <span class="pm-note-dot">•</span>
+            <span>Choose your preferred payment method</span>
+        </div>
+
+    </div>
+</main>
+
+{% endblock %}

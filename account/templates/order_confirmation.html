@@ -1,0 +1,208 @@
+ {% extends "base.html" %}
+{% load static %}
+
+{% block title %}Foodie | Order Confirmation{% endblock %}
+
+{% block content %}
+
+
+<section class="oc-page">
+    <div class="oc-container">
+
+        <!-- Success Header -->
+        <div class="oc-success">
+            <div class="oc-success-icon">
+                <i class="bi bi-check-lg"></i>
+            </div>
+
+            <p class="oc-eyebrow">FOODIE ORDER UPDATE</p>
+
+            <h1>
+                {% if order.payment_method == "online" and order.payment_status != "paid" %}
+                    Your order is awaiting payment
+                {% else %}
+                    Thank you for your order!
+                {% endif %}
+            </h1>
+
+            <p class="oc-subtitle">
+                {% if order.payment_method == "online" and order.payment_status != "paid" %}
+                    Your order has been saved. Online payment is still pending.
+                {% else %}
+                    Your delicious food order has been placed successfully.
+                {% endif %}
+            </p>
+
+            <div class="oc-order-number">
+                <span>ORDER NUMBER</span>
+                <strong>{{ order.order_number }}</strong>
+            </div>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="oc-layout">
+
+            <div class="oc-main">
+
+                <!-- Ordered Food -->
+                <div class="oc-card">
+                    <div class="oc-card-heading">
+                        <div>
+                            <span class="oc-section-label">YOUR SELECTION</span>
+                            <h2>Order Summary</h2>
+                        </div>
+                        <i class="bi bi-bag-check oc-heading-icon"></i>
+                    </div>
+
+                    <div class="oc-items">
+                        {% for item in order.items.all %}
+                        <div class="oc-item">
+
+                            {% if item.food and item.food.image %}
+                                <img
+                                    src="{{ item.food.image.url }}"
+                                    alt="{{ item.food_name }}"
+                                    class="oc-food-image">
+                            {% else %}
+                                <div class="oc-food-placeholder">
+                                    <i class="bi bi-egg-fried"></i>
+                                </div>
+                            {% endif %}
+
+                            <div class="oc-food-info">
+                                <h3>{{ item.food_name }}</h3>
+                                <p>Quantity: {{ item.quantity }}</p>
+                                <span>₹{{ item.unit_price }} each</span>
+                            </div>
+
+                            <strong class="oc-item-price">
+                                ₹{{ item.line_total }}
+                            </strong>
+
+                        </div>
+                        {% empty %}
+                        <p class="oc-empty">
+                            Order item details are not available.
+                        </p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="oc-price-row">
+                        <span>Subtotal</span>
+                        <span>₹{{ order.subtotal }}</span>
+                    </div>
+
+                    <div class="oc-price-row">
+                        <span>Delivery fee</span>
+                        <span>₹{{ order.delivery_fee }}</span>
+                    </div>
+
+                    <div class="oc-total-row">
+                        <span>Total amount</span>
+                        <strong>₹{{ order.total }}</strong>
+                    </div>
+                </div>
+
+                <!-- Delivery Details -->
+                <div class="oc-card">
+                    <div class="oc-card-heading">
+                        <div>
+                            <span class="oc-section-label">DELIVERY INFORMATION</span>
+                            <h2>Delivering to</h2>
+                        </div>
+                        <i class="bi bi-geo-alt oc-heading-icon"></i>
+                    </div>
+
+                    <div class="oc-address">
+                        <div class="oc-address-icon">
+                            <i class="bi bi-house-heart"></i>
+                        </div>
+
+                        <div>
+                            <h3>{{ order.full_name }}</h3>
+                            <p>{{ order.address }}</p>
+                            <p>{{ order.city }}, {{ order.state }} - {{ order.pincode }}</p>
+                            <p>{{ order.phone }}</p>
+                            <p>{{ order.email }}</p>
+
+                            {% if order.notes %}
+                            <div class="oc-notes">
+                                <strong>Delivery instructions:</strong>
+                                <p>{{ order.notes }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Order Status Sidebar -->
+            <aside class="oc-sidebar">
+                <div class="oc-card oc-status-card">
+                    <span class="oc-section-label">ORDER DETAILS</span>
+                    <h2>Order status</h2>
+
+                    <div class="oc-status-row">
+                        <span>Order</span>
+                        <span class="oc-status-badge">
+                            {{ order.status|title }}
+                        </span>
+                    </div>
+
+                    <div class="oc-status-row">
+                        <span>Payment method</span>
+                        <strong>
+                            {% if order.payment_method == "cod" %}
+                                Cash on Delivery
+                            {% elif order.payment_method == "online" %}
+                                Online Payment
+                            {% else %}
+                                {{ order.payment_method|title }}
+                            {% endif %}
+                        </strong>
+                    </div>
+
+                    <div class="oc-status-row">
+                        <span>Payment status</span>
+                        <span class="oc-payment-status">
+                            {{ order.payment_status|title }}
+                        </span>
+                    </div>
+
+                    {% if order.payment_method == "online" and order.payment_status != "paid" %}
+                    <div class="oc-pending-note">
+                        <i class="bi bi-clock-history"></i>
+                        <p>Your online payment is pending verification.</p>
+                    </div>
+                    {% else %}
+                    <div class="oc-thankyou-note">
+                        <i class="bi bi-heart-fill"></i>
+                        <p>Thank you for choosing Foodie. We appreciate your order!</p>
+                    </div>
+                    {% endif %}
+
+                    <a href="{% url 'home' %}" class="oc-home-button">
+                        <i class="bi bi-house"></i>
+                        Continue Shopping
+                    </a>
+
+                    <a href="{% url 'cart' %}" class="oc-secondary-button">
+                        Back to Cart
+                    </a>
+                </div>
+
+                <div class="oc-help">
+                    <i class="bi bi-chat-dots"></i>
+                    <div>
+                        <strong>Need help?</strong>
+                        <p>Contact our team if you have questions about your order.</p>
+                        <a href="{% url 'contact' %}">Contact Us &rarr;</a>
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+    </div>
+</section>
+{% endblock %}

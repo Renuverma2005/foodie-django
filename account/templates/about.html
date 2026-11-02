@@ -1,0 +1,185 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About Us | Foodie{% endblock %}
+
+{% block content %}
+
+
+
+<!-- ABOUT HERO -->
+<section class="about-hero">
+    <div class="about-container about-hero-grid">
+
+        <div class="about-hero-content">
+            <span class="about-eyebrow">
+                <i class="bi bi-stars"></i>
+                WELCOME TO FOODIE
+            </span>
+
+            <h1>
+                Good Food.<br>
+                <span>Great Moments.</span>
+            </h1>
+
+            <p>
+                Every meal tells a story. At Foodie, we bring
+                your favourite flavours together to make every
+                bite memorable and every moment special.
+            </p>
+
+            <div class="about-hero-actions">
+                <a href="{% url 'food_menu' %}" class="about-btn">
+                    Explore Our Menu
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+
+                <a href="#our-story" class="about-text-link">
+                    Discover Our Story
+                </a>
+            </div>
+
+            <div class="about-mini-stats">
+                <div>
+                    <strong>{{ food_count }}+</strong>
+                    <span>Available Foods</span>
+                </div>
+
+                <div>
+                    <strong>{{ category_count }}+</strong>
+                    <span>Food Categories</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-hero-visual">
+            <div class="about-image-frame">
+                <img
+                    src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1000&q=85"
+                    alt="A delicious meal prepared with care"
+                >
+            </div>
+
+            <div class="about-floating-card">
+                <span class="about-floating-icon">
+                    <i class="bi bi-heart-fill"></i>
+                </span>
+                <div>
+                    <strong>Made with Love</strong>
+                    <p>Food that brings us together.</p>
+                </div>
+            </div>
+
+            <div class="about-decoration"></div>
+        </div>
+
+    </div>
+</section>
+
+<!-- OUR STORY -->
+<section class="about-story" id="our-story">
+    <div class="about-container about-story-grid">
+
+        <div class="about-story-label">
+            <span class="about-eyebrow">OUR STORY</span>
+            <h2>More Than Food.<br>A Feeling.</h2>
+        </div>
+
+        <div class="about-story-content">
+            <p class="about-story-lead">
+                We believe that great food makes ordinary
+                moments extraordinary.
+            </p>
+
+            <p>
+                Foodie is your destination for discovering
+                delicious meals across different food
+                categories. From comforting North Indian dishes
+                and South Indian favourites to Chinese delights,
+                biryani and fast food, there is something for
+                every craving.
+            </p>
+
+            <p>
+                Our goal is to make exploring your favourite
+                foods simple, enjoyable and convenient.
+                Discover a dish, explore its details and choose
+                what you would love to eat.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+<!-- WHY CHOOSE US -->
+<section class="about-benefits">
+    <div class="about-container">
+
+        <div class="about-section-heading">
+            <span class="about-eyebrow">THE FOODIE DIFFERENCE</span>
+            <h2>Why You'll Love Foodie</h2>
+            <p>A simple and enjoyable way to discover your next favourite meal.</p>
+        </div>
+
+        <div class="about-benefit-grid">
+
+            <article class="about-benefit-card">
+                <div class="about-benefit-icon">
+                    <i class="bi bi-grid-1x2"></i>
+                </div>
+                <h3>Variety of Choices</h3>
+                <p>
+                    Explore different food categories and find
+                    dishes to match your cravings.
+                </p>
+            </article>
+
+            <article class="about-benefit-card">
+                <div class="about-benefit-icon">
+                    <i class="bi bi-image"></i>
+                </div>
+                <h3>Explore Every Dish</h3>
+                <p>
+                    View food images, descriptions and prices
+                    before choosing your meal.
+                </p>
+            </article>
+
+            <article class="about-benefit-card">
+                <div class="about-benefit-icon">
+                    <i class="bi bi-bag-heart"></i>
+                </div>
+                <h3>Easy Food Ordering</h3>
+                <p>
+                    Browse the menu, select quantities and
+                    add your favourite foods to your cart.
+                </p>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+<!-- EXPLORE CATEGORIES -->
+<section class="about-categories">
+    <div class="about-container about-category-banner">
+
+        <div>
+            <span class="about-eyebrow">SOMETHING DELICIOUS AWAITS</span>
+            <h2>Your Next Favourite<br>Meal Is Waiting.</h2>
+            <p>
+                Explore our menu and discover something
+                delicious for your next meal.
+            </p>
+        </div>
+
+        <a href="{% url 'food_menu' %}" class="about-btn about-btn-light">
+            Browse Food Menu
+            <i class="bi bi-arrow-up-right"></i>
+        </a>
+
+    </div>
+</section>
+
+{% endblock %}

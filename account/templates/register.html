@@ -1,0 +1,123 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sign Up | Foodie{% endblock %}
+
+{% block content %}
+
+
+<section class="fs-signup-page">
+    <div class="fs-signup-card">
+
+        <div class="fs-signup-visual">
+            <a href="{% url 'home' %}" class="fs-signup-brand">
+                <i class="bi bi-egg-fried"></i>
+                <span>Foodie</span>
+            </a>
+
+            <div class="fs-signup-message">
+                <span class="fs-signup-tag">A LITTLE TASTE OF HAPPINESS</span>
+                <h1>Good food<br>brings people<br>together.</h1>
+                <p>Create your account and make every meal a delicious moment.</p>
+            </div>
+
+            <div class="fs-signup-note">
+                <i class="bi bi-heart-fill"></i>
+                <span>Made with love. Served with flavour.</span>
+            </div>
+        </div>
+
+        <div class="fs-signup-form-side">
+            <div class="fs-signup-heading">
+                <span class="fs-signup-eyebrow">JOIN OUR TABLE</span>
+                <h2>Create account</h2>
+                <p>Sign up to get started with Foodie.</p>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="fs-signup-alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            {% if form_errors %}
+                {% for error in form_errors %}
+                    <div class="fs-signup-alert">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" class="fs-signup-form">
+                {% csrf_token %}
+
+                <div class="fs-signup-field">
+                    <label for="signup-name">Full Name</label>
+                    <div class="fs-signup-input">
+                        <i class="bi bi-person"></i>
+                        <input type="text" id="signup-name" name="first_name"
+                               placeholder="Enter your full name"
+                               value="{{ entered_name|default:'' }}" required>
+                    </div>
+                </div>
+
+                <div class="fs-signup-field">
+                    <label for="signup-username">Username</label>
+                    <div class="fs-signup-input">
+                        <i class="bi bi-person-badge"></i>
+                        <input type="text" id="signup-username" name="username"
+                               placeholder="Choose a username"
+                               value="{{ entered_username|default:'' }}"
+                               autocomplete="username" required>
+                    </div>
+                </div>
+
+                <div class="fs-signup-field">
+                    <label for="signup-email">Email Address</label>
+                    <div class="fs-signup-input">
+                        <i class="bi bi-envelope"></i>
+                        <input type="email" id="signup-email" name="email"
+                               placeholder="you@example.com"
+                               value="{{ entered_email|default:'' }}"
+                               autocomplete="email" required>
+                    </div>
+                </div>
+
+                <div class="fs-signup-field">
+                    <label for="signup-password">Password</label>
+                    <div class="fs-signup-input">
+                        <i class="bi bi-lock"></i>
+                        <input type="password" id="signup-password" name="password1"
+                               placeholder="Create a password"
+                               autocomplete="new-password" required>
+                    </div>
+                </div>
+
+                <div class="fs-signup-field">
+                    <label for="signup-confirm-password">Confirm Password</label>
+                    <div class="fs-signup-input">
+                        <i class="bi bi-shield-lock"></i>
+                        <input type="password" id="signup-confirm-password"
+                               name="password2" placeholder="Enter password again"
+                               autocomplete="new-password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="fs-signup-submit">
+                    Create my account
+                    <i class="bi bi-arrow-right"></i>
+                </button>
+            </form>
+
+            <p class="fs-signup-login">
+                Already have an account?
+                <a href="{% url 'login' %}">Login</a>
+            </p>
+
+            <a href="{% url 'home' %}" class="fs-signup-back">
+                <i class="bi bi-arrow-left"></i> Back to Home
+            </a>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

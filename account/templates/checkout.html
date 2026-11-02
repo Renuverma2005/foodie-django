@@ -1,0 +1,470 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Secure Checkout | Foodie{% endblock %}
+
+{% block content %}
+
+
+<section class="ck-page">
+    <div class="container">
+
+        <!-- Breadcrumb -->
+        <nav class="ck-breadcrumb">
+            <a href="{% url 'home' %}">Home</a>
+            <span>/</span>
+            <a href="{% url 'cart' %}">Your Cart</a>
+            <span>/</span>
+            <span>Checkout</span>
+        </nav>
+
+        <!-- Header -->
+        <header class="ck-heading">
+            <div>
+                <span class="ck-eyebrow">FOODIE • CHECKOUT STUDIO</span>
+
+                <h1>
+                    Your next<br>
+                    <em>delicious moment.</em>
+                </h1>
+
+                <p>
+                    Confirm your details, choose your payment
+                    and leave the delicious part to us.
+                </p>
+            </div>
+
+            <div class="ck-step">
+                <span>03</span>
+                <div>
+                    <strong>ALMOST THERE</strong>
+                    <small>Delivery · Payment · Done</small>
+                </div>
+            </div>
+        </header>
+
+        <!-- Django messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="ck-message {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if cart_items %}
+
+        <form method="post" class="ck-layout">
+            {% csrf_token %}
+
+            <!-- LEFT SIDE -->
+            <div class="ck-main">
+
+                <!-- Delivery details -->
+                <section class="ck-panel">
+
+                    <div class="ck-panel-heading">
+                        <span class="ck-number">01</span>
+
+                        <div>
+                            <h2>Delivery details</h2>
+                            <p>Where should we deliver your food?</p>
+                        </div>
+
+                        <span class="ck-section-mark">
+                            <i class="bi bi-geo-alt"></i>
+                        </span>
+                    </div>
+
+                    <div class="ck-fields">
+
+                        <div class="ck-field ck-full">
+                            <label for="full_name">
+                                FULL NAME <span>*</span>
+                            </label>
+
+                            <input
+                                id="full_name"
+                                name="full_name"
+                                type="text"
+                                maxlength="150"
+                                placeholder="Enter your full name"
+                                autocomplete="name"
+                                required
+                            >
+                        </div>
+
+                        <div class="ck-field">
+                            <label for="email">
+                                EMAIL ADDRESS <span>*</span>
+                            </label>
+
+                            <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                maxlength="254"
+                                placeholder="you@example.com"
+                                autocomplete="email"
+                                required
+                            >
+                        </div>
+
+                        <div class="ck-field">
+                            <label for="phone">
+                                PHONE NUMBER <span>*</span>
+                            </label>
+
+                            <input
+                                id="phone"
+                                name="phone"
+                                type="tel"
+                                maxlength="15"
+                                pattern="[0-9+() -]{10,15}"
+                                placeholder="Your contact number"
+                                autocomplete="tel"
+                                required
+                            >
+                        </div>
+
+                        <div class="ck-field ck-full">
+                            <label for="address">
+                                STREET ADDRESS <span>*</span>
+                            </label>
+
+                            <textarea
+                                id="address"
+                                name="address"
+                                rows="3"
+                                maxlength="1000"
+                                placeholder="House number, street, area and landmark"
+                                autocomplete="street-address"
+                                required
+                            ></textarea>
+                        </div>
+
+                        <div class="ck-field">
+                            <label for="city">
+                                CITY <span>*</span>
+                            </label>
+
+                            <input
+                                id="city"
+                                name="city"
+                                type="text"
+                                maxlength="100"
+                                placeholder="Your city"
+                                autocomplete="address-level2"
+                                required
+                            >
+                        </div>
+
+                        <div class="ck-field">
+                            <label for="state">
+                                STATE <span>*</span>
+                            </label>
+
+                            <input
+                                id="state"
+                                name="state"
+                                type="text"
+                                maxlength="100"
+                                placeholder="Your state"
+                                autocomplete="address-level1"
+                                required
+                            >
+                        </div>
+
+                        <div class="ck-field">
+                            <label for="pincode">
+                                PIN CODE <span>*</span>
+                            </label>
+
+                            <input
+                                id="pincode"
+                                name="pincode"
+                                type="text"
+                                maxlength="12"
+                                inputmode="numeric"
+                                placeholder="Postal code"
+                                autocomplete="postal-code"
+                                required
+                            >
+                        </div>
+
+                        <div class="ck-field ck-full">
+                            <label for="notes">
+                                DELIVERY NOTE
+                                <small>(OPTIONAL)</small>
+                            </label>
+
+                            <textarea
+                                id="notes"
+                                name="notes"
+                                rows="2"
+                                maxlength="1000"
+                                placeholder="Gate number, floor or delivery instructions"
+                            ></textarea>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Payment methods -->
+                <section class="ck-panel">
+
+                    <div class="ck-panel-heading">
+                        <span class="ck-number">02</span>
+
+                        <div>
+                            <h2>Choose your payment</h2>
+                            <p>Pick the option that works best for you.</p>
+                        </div>
+
+                        <span class="ck-section-mark">
+                            <i class="bi bi-wallet2"></i>
+                        </span>
+                    </div>
+
+                    <div class="ck-payment-options">
+
+                        <!-- Cash on delivery -->
+                        <label class="ck-payment-option">
+                            <input
+                                type="radio"
+                                name="payment_method"
+                                value="cod"
+                                checked
+                            >
+
+                            <span class="ck-payment-symbol ck-cod-symbol">
+                                <i class="bi bi-cash-coin"></i>
+                            </span>
+
+                            <span class="ck-payment-copy">
+                                <strong>Cash on Delivery</strong>
+                                <small>Pay when your food arrives</small>
+                            </span>
+
+                            <span class="ck-radio">
+                                <i class="bi bi-check2"></i>
+                            </span>
+                        </label>
+
+                        <!-- UPI -->
+                        <label class="ck-payment-option">
+                            <input
+                                type="radio"
+                                name="payment_method"
+                                value="online"
+                            >
+
+                            <span class="ck-payment-symbol ck-upi-symbol">
+                                <i class="bi bi-phone"></i>
+                            </span>
+
+                            <span class="ck-payment-copy">
+                                <strong>UPI Payment</strong>
+                                <small>Google Pay, PhonePe or Paytm</small>
+                            </span>
+
+                            <span class="ck-radio">
+                                <i class="bi bi-check2"></i>
+                            </span>
+                        </label>
+
+                        <!-- Card -->
+                        <label class="ck-payment-option">
+                            <input
+                                type="radio"
+                                name="payment_method"
+                                value="online"
+                            >
+
+                            <span class="ck-payment-symbol ck-card-symbol">
+                                <i class="bi bi-credit-card-2-front"></i>
+                            </span>
+
+                            <span class="ck-payment-copy">
+                                <strong>Credit / Debit Card</strong>
+                                <small>Visa, Mastercard and supported cards</small>
+                            </span>
+
+                            <span class="ck-radio">
+                                <i class="bi bi-check2"></i>
+                            </span>
+                        </label>
+
+                        <div class="ck-payment-note">
+                            <i class="bi bi-info-circle"></i>
+
+                            <span>
+                                Online payment requires a connected payment
+                                gateway. No card details are collected on this page.
+                            </span>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Trust information -->
+                <div class="ck-trust-strip">
+                    <span>
+                        <i class="bi bi-check-circle"></i>
+                        Freshly prepared
+                    </span>
+
+                    <span>
+                        <i class="bi bi-box-seam"></i>
+                        Carefully packed
+                    </span>
+
+                    <span>
+                        <i class="bi bi-heart"></i>
+                        Made with care
+                    </span>
+                </div>
+
+            </div>
+
+            <!-- RIGHT SIDE: ORDER SUMMARY -->
+            <aside class="ck-summary">
+
+                <div class="ck-summary-top">
+                    <span class="ck-eyebrow">YOUR FOODIE BAG</span>
+
+                    <h2>Order summary<span>.</span></h2>
+
+                    <p>
+                        {{ cart_items|length }}
+                        item{{ cart_items|length|pluralize }} selected
+                    </p>
+                </div>
+
+                <!-- Dynamic cart items -->
+                <div class="ck-order-items">
+
+                    {% for item in cart_items %}
+
+                    <div class="ck-order-item">
+
+                        <div class="ck-item-image">
+
+                            {% if item.food.image %}
+                                <img
+                                    src="{{ item.food.image.url }}"
+                                    alt="{{ item.food.name }}"
+                                >
+                            {% else %}
+                                <div class="ck-no-image">
+                                    <i class="bi bi-egg-fried"></i>
+                                </div>
+                            {% endif %}
+
+                            <span>{{ item.quantity }}</span>
+                        </div>
+
+                        <div class="ck-item-info">
+                            <strong>{{ item.food.name }}</strong>
+
+                            <small>
+                                ₹{{ item.food.price }}
+                                × {{ item.quantity }}
+                            </small>
+                        </div>
+
+                        <span class="ck-item-total">
+                            ₹{{ item.line_total|floatformat:2 }}
+                        </span>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                <!-- Price breakdown -->
+                <div class="ck-price-lines">
+
+                    <div>
+                        <span>Subtotal</span>
+                        <strong>₹{{ subtotal|floatformat:2 }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Delivery fee</span>
+                        <strong>₹{{ delivery_fee|floatformat:2 }}</strong>
+                    </div>
+
+                </div>
+
+                <!-- Grand total -->
+                <div class="ck-grand-total">
+                    <div>
+                        <span>Total payable</span>
+                        <small>Includes listed charges</small>
+                    </div>
+
+                    <strong>₹{{ total|floatformat:2 }}</strong>
+                </div>
+
+                <!-- Submit order -->
+                <button type="submit" class="ck-place-order">
+                    <span>Place my order</span>
+                    <i class="bi bi-arrow-up-right"></i>
+                </button>
+
+                <div class="ck-secure-note">
+                    <i class="bi bi-shield-check"></i>
+
+                    <span>
+                        Your delivery details are submitted securely.
+                    </span>
+                </div>
+
+                <a class="ck-back-cart" href="{% url 'cart' %}">
+                    <i class="bi bi-arrow-left"></i>
+                    Back to cart
+                </a>
+
+            </aside>
+
+        </form>
+
+        {% else %}
+
+        <!-- Empty cart -->
+        <div class="ck-empty">
+
+            <span class="ck-empty-icon">
+                <i class="bi bi-basket2"></i>
+            </span>
+
+            <span class="ck-eyebrow">YOUR BAG IS WAITING</span>
+
+            <h2>Nothing delicious here yet.</h2>
+
+            <p>
+                Add something tasty to your cart before heading to checkout.
+            </p>
+
+            <a href="{% url 'home' %}" class="ck-place-order ck-empty-button">
+                Explore the menu
+                <i class="bi bi-arrow-up-right"></i>
+            </a>
+
+        </div>
+
+        {% endif %}
+
+        <!-- Footer -->
+        <footer class="ck-footer-note">
+            <span>FOODIE<span class="ck-footer-dot">.</span></span>
+            <p>Thoughtfully prepared. Happily delivered.</p>
+        </footer>
+
+    </div>
+</section>
+
+{% endblock %}

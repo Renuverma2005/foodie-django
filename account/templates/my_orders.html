@@ -1,0 +1,284 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Orders | Foodie{% endblock %}
+
+{% block content %}
+
+
+
+<section class="mo-page">
+    <div class="mo-container">
+
+        <!-- Page Heading -->
+        <div class="mo-heading">
+            <span class="mo-eyebrow">YOUR FOOD JOURNEY</span>
+            <h1>My <span>Orders</span></h1>
+            <p>Track your orders and revisit your favourite meals.</p>
+        </div>
+
+        {% if orders %}
+
+            <!-- Order Journey Stepper -->
+            <div class="mo-stepper-card">
+                <h3 class="mo-stepper-title">Your Order Journey</h3>
+
+                <ol class="stepper">
+                    <li class="stepper-item active">
+                        <span class="stepper-circle">
+                            <i class="bi bi-bag-check"></i>
+                        </span>
+                        <span class="stepper-text">Order Placed</span>
+                    </li>
+
+                    <li class="stepper-item">
+                        <span class="stepper-circle">
+                            <i class="bi bi-check2-circle"></i>
+                        </span>
+                        <span class="stepper-text">Confirmed</span>
+                    </li>
+
+                    <li class="stepper-item">
+                        <span class="stepper-circle">
+                            <i class="bi bi-fire"></i>
+                        </span>
+                        <span class="stepper-text">Preparing</span>
+                    </li>
+
+                    <li class="stepper-item">
+                        <span class="stepper-circle">
+                            <i class="bi bi-house-check"></i>
+                        </span>
+                        <span class="stepper-text">Delivered</span>
+                    </li>
+                </ol>
+
+                <p class="mo-stepper-note">
+                    Your latest order status is shown on each order card below.
+                </p>
+            </div>
+
+            <!-- Order List -->
+            <div class="mo-order-list">
+
+                {% for order in orders %}
+
+                    <article class="mo-card">
+
+                        <!-- Order Header -->
+                        <div class="mo-card-top">
+                            <div class="mo-order-info">
+                                <span class="mo-label">ORDER NUMBER</span>
+                                <h3>#{{ order.order_number }}</h3>
+                                {% if order.created_at %}
+                                    <p class="mo-order-date">
+                                        {{ order.created_at|date:"d M Y, h:i A" }}
+                                    </p>
+                                {% endif %}
+                            </div>
+
+                            <span class="mo-status
+                                {% if order.status == 'delivered' %}status-delivered
+                                {% elif order.status == 'cancelled' %}status-cancelled
+                                {% elif order.status == 'pending' %}status-pending
+                                {% else %}status-processing{% endif %}">
+                                {{ order.get_status_display|default:order.status }}
+                            </span>
+                        </div>
+
+                        <div class="mo-divider"></div>
+
+                        <!-- Food Items -->
+                        <div class="mo-items">
+
+                            {% for item in order.items.all %}
+
+                                <div class="mo-item">
+
+                                    {% if item.food and item.food.image %}
+                                        <img
+                                            src="{{ item.food.image.url }}"
+                                            alt="{{ item.food_name }}"
+                                            class="mo-food-image"
+                                        >
+                                    {% else %}
+                                        <div class="mo-food-placeholder">
+                                            <i class="bi bi-egg-fried"></i>
+                                        </div>
+                                    {% endif %}
+
+                                    <div class="mo-food-info">
+                                        <h4>{{ item.food_name }}</h4>
+                                        <p>Quantity: {{ item.quantity }}</p>
+                                        <span>₹{{ item.unit_price }}</span>
+                                    </div>
+
+                                    <strong class="mo-line-total">
+                                        ₹{{ item.line_total }}
+                                    </strong>
+
+                                </div>
+
+                            {% empty %}
+                                <p class="mo-muted">
+                                    No food items found for this order.
+                                </p>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="mo-divider"></div>
+
+                        <!-- Delivery Details -->
+                        <div class="mo-delivery">
+                            <div class="mo-detail-block">
+                                <span class="mo-label">DELIVERY ADDRESS</span>
+                                <p>
+                                    {{ order.address }}<br>
+                                    {{ order.city }}, {{ order.state }} - {{ order.pincode }}
+                                </p>
+                            </div>
+
+                            <div class="mo-detail-block">
+                                <span class="mo-label">CONTACT</span>
+                                <p>{{ order.full_name }}</p>
+                                <p>{{ order.phone }}</p>
+                            </div>
+                        </div>
+
+                        <div class="mo-divider"></div>
+
+                        <!-- Payment Details -->
+                        <div class="mo-payment">
+
+                            <div>
+                                <span class="mo-label">PAYMENT METHOD</span>
+                                <p>
+                                    {{ order.get_payment_method_display|default:order.payment_method }}
+                                </p>
+                            </div>
+
+                            <div>
+                                <span class="mo-label">PAYMENT STATUS</span>
+                                <p class="mo-payment-status">
+                                    {{ order.get_payment_status_display|default:order.payment_status }}
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <!-- Order Progress -->
+                        {% if order.status == 'cancelled' %}
+
+                            <div class="mo-cancelled-note">
+                                <i class="bi bi-x-circle"></i>
+                                This order has been cancelled.
+                            </div>
+
+                        {% else %}
+
+                            <div class="mo-progress">
+                                <span class="mo-label">ORDER PROGRESS</span>
+
+                                <ol class="stepper mo-order-stepper">
+
+                                    <li class="stepper-item
+                                        {% if order.status == 'pending' or order.status == 'confirmed' or order.status == 'processing' or order.status == 'preparing' or order.status == 'out_for_delivery' or order.status == 'delivered' %}active{% endif %}">
+                                        <span class="stepper-circle">
+                                            <i class="bi bi-bag-check"></i>
+                                        </span>
+                                        <span class="stepper-text">Placed</span>
+                                    </li>
+
+                                    <li class="stepper-item
+                                        {% if order.status == 'confirmed' or order.status == 'processing' or order.status == 'preparing' or order.status == 'out_for_delivery' or order.status == 'delivered' %}active{% endif %}">
+                                        <span class="stepper-circle">
+                                            <i class="bi bi-check2-circle"></i>
+                                        </span>
+                                        <span class="stepper-text">Confirmed</span>
+                                    </li>
+
+                                    <li class="stepper-item
+                                        {% if order.status == 'processing' or order.status == 'preparing' or order.status == 'out_for_delivery' or order.status == 'delivered' %}active{% endif %}">
+                                        <span class="stepper-circle">
+                                            <i class="bi bi-fire"></i>
+                                        </span>
+                                        <span class="stepper-text">Preparing</span>
+                                    </li>
+
+                                    <li class="stepper-item
+                                        {% if order.status == 'delivered' %}active{% endif %}">
+                                        <span class="stepper-circle">
+                                            <i class="bi bi-house-check"></i>
+                                        </span>
+                                        <span class="stepper-text">Delivered</span>
+                                    </li>
+
+                                </ol>
+                            </div>
+
+                        {% endif %}
+
+                        <div class="mo-divider"></div>
+
+                        <!-- Total and Action -->
+                        <div class="mo-card-bottom">
+
+                            <div class="mo-total-block">
+                                <span class="mo-label">TOTAL AMOUNT</span>
+                                <h2>₹{{ order.total }}</h2>
+
+                                <p class="mo-total-breakdown">
+                                    Subtotal: ₹{{ order.subtotal }}
+                                    <span>·</span>
+                                    Delivery: ₹{{ order.delivery_fee }}
+                                </p>
+                            </div>
+
+                            <a
+                                href="{% url 'order_confirmation' order.order_number %}"
+                                class="mo-view-btn"
+                            >
+                                View Order
+                                <i class="bi bi-arrow-right"></i>
+                            </a>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <!-- Empty Orders -->
+            <div class="mo-empty">
+
+                <div class="mo-empty-icon">
+                    <i class="bi bi-bag-heart"></i>
+                </div>
+
+                <span class="mo-eyebrow">YOUR TABLE IS WAITING</span>
+                <h2>No orders yet</h2>
+
+                <p>
+                    You haven't placed any orders yet.
+                    Explore our menu and find something delicious.
+                </p>
+
+                <a href="{% url 'food_menu' %}" class="mo-view-btn">
+                    Explore Food Menu
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+</section>
+
+{% endblock %}
