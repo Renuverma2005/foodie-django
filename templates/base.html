@@ -93,14 +93,8 @@
                         </a>
                     </li>
 
-                
-                    {% if user.is_staff %}
-              <li class="nav-item">
-        <a class="nav-link" href="{% url 'admin_dashboard' %}">
-            Dashboard
-        </a>
-    </li>
-{% endif %}
+            
+                    
 
 
 
@@ -131,18 +125,13 @@
                         <span>Cart</span>
                     </a>
 
-                    {% if user.is_authenticated %}
-
-                        <a href="{% url 'login' %}" class="nav-login">
-                            <i class="bi bi-box-arrow-right"></i>
+                     <a href="{% url 'login' %}" class="nav-login">
                             Login
                         </a>
 
-                    {% else %}
 
-                        <a href="{% url 'login' %}" class="nav-login">
-                            Login
-                        </a>
+                     
+                    
 
                         <a href="{% url 'register' %}" class="nav-register">
                             Sign Up
