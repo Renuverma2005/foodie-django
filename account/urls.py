@@ -39,7 +39,7 @@ urlpatterns = [
 
     path("checkout/", views.checkout, name="checkout"),
 
-     path("payment/", views.payment, name="payment"),
+    path("payment/<uuid:order_number>/", views.payment, name="payment"),
 
 
     path( "order-confirmation/<uuid:order_number>/", views.order_confirmation, name="order_confirmation", ),

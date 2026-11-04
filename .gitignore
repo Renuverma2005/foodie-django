@@ -6,5 +6,4 @@ db.sqlite3
 db_backup.sqlite3
 .env
 staticfiles/
-media/
 .vscode/
